@@ -1,0 +1,8 @@
+<div class="container">
+    <div class="menu">menu menu menu</div>
+    <div class="logo">HABITY</div>
+    <div class="profile" *ngIf="authService.user$ | async as user">
+        <img [src]="user.photoURL" routerLink="/profile">
+        <div class="logout" (click)="authService.signOut()">Log Out</div>
+    </div>
+</div>
