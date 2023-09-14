@@ -1,3 +1,28 @@
-<div class="greetings" *ngIf="authService.user$ | async as user">
-    hello {{ user.displayName }}!
+<div class="container">
+
+    <div class="main">
+        <div class="left-side">
+            <div class="nav">
+                <div class="left-arrow"> l--</div>
+                <div class="date">TODAY</div>
+                <div class="right-arrow"> --r </div>
+            </div>
+
+            <app-habit-explorer></app-habit-explorer>
+
+        </div>
+        <div class="right-side">
+            <div class="greetings" *ngIf="authService.user$ | async as user">
+                hello {{ user.displayName }}!
+            </div>
+            <div class="quote">
+                <div class="text">"{{quote}}"</div>
+                <div class="author">{{author}}</div>
+            </div>
+            <div class="stats-wrapper">
+                <div class="stats">random stats</div>
+                <div class="today-completion">{{habitsService.evaluatePercentage()}}%</div>
+            </div>
+        </div>
+    </div>
 </div>

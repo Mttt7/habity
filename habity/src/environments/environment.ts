@@ -1,12 +1,12 @@
 export const environment = {
     production: false,
     firebase: {
-        apiKey: "AIzaSyAG9OFD78q6P075U866mRXIIP02-FCv2fE",
-        authDomain: "practice2-2d5dd.firebaseapp.com",
-        projectId: "practice2-2d5dd",
-        storageBucket: "practice2-2d5dd.appspot.com",
-        messagingSenderId: "489103947964",
-        appId: "1:489103947964:web:200b77e4e5ef81445f38b9",
-        measurementId: "G-4EPH1LMT2N"
+        apiKey: "AIzaSyCs4b8P4StSCg8GkinIPIfnoRbtxaEa2PE",
+        authDomain: "habity-db394.firebaseapp.com",
+        projectId: "habity-db394",
+        storageBucket: "habity-db394.appspot.com",
+        messagingSenderId: "586485094409",
+        appId: "1:586485094409:web:764649daed82e31caa80d8",
+        measurementId: "G-7DSB6EHMTK"
     }
 };

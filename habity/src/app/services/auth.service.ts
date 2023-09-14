@@ -6,7 +6,7 @@ import {
   AngularFirestoreDocument
 } from '@angular/fire/compat/firestore';
 
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { switchMap } from 'rxjs';
 import { User } from './user.model';
 
@@ -41,11 +41,17 @@ export class AuthService {
     )
   }
 
+  getLoggedInUserId(): Observable<string | null> {
+    return this.afAuth.authState.pipe(map((user: User | null) => {
+      return user ? user.uid : null;
+    }));
+  }
+
   async googleSignin() {
 
     const provider = new GoogleAuthProvider();
     const credential = await this.afAuth.signInWithPopup(provider);
-    this.router.navigate(['/dashboard']);
+    //this.router.navigate(['/dashboard']);
     return this.updateUserData(credential.user);
 
   }
