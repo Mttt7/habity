@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
+import { Habit } from './habit.model';
+
+interface CalendarData {
+  habits: { id: string; done: boolean }[];
+  // inne pola, jeśli istnieją
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class FirebaseHabitsService {
 
   constructor(private firestore: AngularFirestore,
@@ -13,19 +20,39 @@ export class FirebaseHabitsService {
 
 
 
-  getHabitsForDay(date: string): Observable<any> {
+
+
+  getHabitsForDay(date: string): Observable<Habit[]> {
     return this.authService.getLoggedInUserId().pipe(
       switchMap(uid => {
         if (uid) {
-          return this.firestore.doc(`users/${uid}/calendar/${date}`).valueChanges()
-          // .pipe(
-          //   map(data => data as any[]), // Przekształć typ danych na any[]
-          // );
+          return this.firestore.doc<CalendarData>(`users/${uid}/calendar/${date}`).valueChanges().pipe(
+            switchMap(calendarData => {
+              const habitIds = calendarData?.habits?.map(h => h.id) || [];
+
+              const habitDocs = habitIds.map(id => this.firestore.doc(`users/${uid}/habits/${id}`).valueChanges());
+              return combineLatest(habitDocs).pipe(
+                map(habitDataArray => {
+                  return habitDataArray.map((habitData: any, index: number) => {
+                    console.log(habitData, calendarData?.habits[index])
+                    if (habitData && calendarData?.habits && calendarData?.habits[index]) {
+                      return {
+                        ...habitData,
+                        ...calendarData?.habits[index]
+                      };
+                    }
+                    return {};
+                  });
+                })
+              );
+            })
+          );
         } else {
-          // Obsłuż przypadki, gdy użytkownik nie jest zalogowany
-          return of([]); // Możesz zwrócić pustą tablicę lub inny odpowiedni stan
+          return of([]);
         }
       })
     );
   }
+
+
 }

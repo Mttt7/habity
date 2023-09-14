@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { HabitsService } from '../services/habits.service';
+import { FirebaseHabitsService } from '../services/firebase-habits.service';
+import { Habit } from '../services/habit.model';
 
 @Component({
   selector: 'app-habit-explorer',
@@ -8,17 +9,17 @@ import { HabitsService } from '../services/habits.service';
 })
 export class HabitExplorerComponent {
 
-  habits = []
+  habits: Habit[] = [];
 
-  constructor(private habitsService: HabitsService) {
-
-  }
+  constructor(private firebaseHabitsService: FirebaseHabitsService) { }
 
   ngOnInit(): void {
-    this.habitsService.getHabits().subscribe((data) => {
-      this.habits = data
-      console.log(data)
-    })
+    const date = '2023-09-14';
+    this.firebaseHabitsService.getHabitsForDay(date).subscribe(habits => {
+      console.log(habits)
+      this.habits = Object.values(habits);
+
+    });
   }
 
   toggleDone(habit) {
